@@ -20,6 +20,7 @@ from src.graph.builder import build_graph_with_memory
 from src.podcast.graph.builder import build_graph as build_podcast_graph
 from src.ppt.graph.builder import build_graph as build_ppt_graph
 from src.prose.graph.builder import build_graph as build_prose_graph
+from src.story.graph.builder import build_graph as build_story_graph
 from src.prompt_enhancer.graph.builder import build_graph as build_prompt_enhancer_graph
 from src.rag.builder import build_retriever
 from src.rag.retriever import Resource
@@ -30,6 +31,7 @@ from src.server.chat_request import (
     GeneratePodcastRequest,
     GeneratePPTRequest,
     GenerateProseRequest,
+    GenerateStoryRequest,
     TTSRequest,
 )
 from src.server.mcp_request import MCPServerMetadataRequest, MCPServerMetadataResponse
@@ -299,6 +301,27 @@ async def generate_prose(request: GenerateProseRequest):
         )
     except Exception as e:
         logger.exception(f"Error occurred during prose generation: {str(e)}")
+        raise HTTPException(status_code=500, detail=INTERNAL_SERVER_ERROR_DETAIL)
+
+
+@app.post("/api/story/generate")
+async def generate_story(request: GenerateStoryRequest):
+    try:
+        workflow = build_story_graph()
+        final_state = workflow.invoke(
+            {
+                "input": request.idea,
+                "outline": request.outline or "",
+                "partial_draft": request.partial_draft or "",
+            }
+        )
+        return {
+            "story": final_state["final_draft"],
+            "outline": final_state.get("outline", ""),
+            "critique": final_state.get("critique", ""),
+        }
+    except Exception as e:
+        logger.exception(f"Error occurred during story generation: {str(e)}")
         raise HTTPException(status_code=500, detail=INTERNAL_SERVER_ERROR_DETAIL)
 
 
