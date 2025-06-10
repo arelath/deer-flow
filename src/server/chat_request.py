@@ -96,6 +96,14 @@ class GenerateProseRequest(BaseModel):
     )
 
 
+class GenerateStoryRequest(BaseModel):
+    idea: str = Field(..., description="The core idea for the story")
+    outline: Optional[str] = Field("", description="Optional story outline")
+    partial_draft: Optional[str] = Field(
+        "", description="Existing partial draft to continue from"
+    )
+
+
 class EnhancePromptRequest(BaseModel):
     prompt: str = Field(..., description="The original prompt to enhance")
     context: Optional[str] = Field(

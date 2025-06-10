@@ -223,6 +223,9 @@ SEARCH_API=tavily
   - AI-powered podcast script generation and audio synthesis
   - Automated creation of simple PowerPoint presentations
   - Customizable templates for tailored content
+- 📖 **Fiction Writing Workflow**
+  - Generates a complete novel from an idea or outline
+  - Supports continuing partial drafts and automated revisions
 
 ## Architecture
 
